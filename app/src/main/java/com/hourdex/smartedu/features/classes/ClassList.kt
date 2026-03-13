@@ -22,7 +22,7 @@ fun ClassesList(
 ) {
     LazyColumn(
         modifier = modifier,
-        contentPadding = PaddingValues(top = 150.dp, start = 8.dp, end = 8.dp),
+        contentPadding = PaddingValues(top = 150.dp, start = 8.dp, end = 8.dp, bottom = 100.dp),
     ) {
         items(classes) {
             ClassesTile(

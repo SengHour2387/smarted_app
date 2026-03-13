@@ -101,32 +101,44 @@ fun EnrollStudentScreen(
                     enrollViewModel.addToSelection(id)
         }
 
-        LazyColumn(
+        UnenrolledStudentList(
             modifier = Modifier
                 .fillMaxWidth()
                 .hazeSource(hazeState)
                 .layerBackdrop(backdrop)
                 .background(backgroundColor),
-            contentPadding = PaddingValues(top = 150.dp, bottom = 130.dp, start = 8.dp, end = 8.dp)
-        ) {
-            item {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center,
-                    text = "Select students to enroll", color = MaterialTheme.colorScheme.onSurface.copy(0.6f))
-                StudentsMiniHeader(widths)
-            }
+            students = students,
+            widths = widths,
+            selectedIds = selectedIds,
+            toggle = ::toggle
+        )
 
-            items(students) { student ->
-                StudentMiniRow(
-                    student = student,
-                    widths = widths,
-                    isSelected = student.id in selectedIds,
-                    onCheckedChange = { toggle(it) }
-                )
-
-            }
-        }
+//        LazyColumn(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .hazeSource(hazeState)
+//                .layerBackdrop(backdrop)
+//                .background(backgroundColor),
+//            contentPadding = PaddingValues(top = 150.dp, bottom = 130.dp, start = 8.dp, end = 8.dp)
+//        ) {
+//            item {
+//                Text(
+//                    modifier = Modifier.fillMaxWidth(),
+//                    textAlign = TextAlign.Center,
+//                    text = "Select students to enroll", color = MaterialTheme.colorScheme.onSurface.copy(0.6f))
+//                StudentsMiniHeader(widths)
+//            }
+//
+//            items(students) { student ->
+//                StudentMiniRow(
+//                    student = student,
+//                    widths = widths,
+//                    isSelected = student.id in selectedIds,
+//                    onCheckedChange = { toggle(it) }
+//                )
+//
+//            }
+//        }
 
         AnimatedVisibility(
             modifier = Modifier.align(Alignment.BottomCenter),

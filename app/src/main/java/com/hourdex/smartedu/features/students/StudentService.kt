@@ -3,6 +3,7 @@ package com.hourdex.smartedu.features.students
 import com.hourdex.smartedu.core.UserRes
 import kotlinx.serialization.Serializable
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
@@ -66,4 +67,7 @@ interface StudentService {
 
     @PATCH("admin/students/{id}")
     suspend fun updateStudent(@Body student: StudentUpdateReq, @Path("id") id: Long)
+
+    @DELETE("admin/students/{id}")
+    suspend fun deleteStudentById(@Path("id" ) id:Long)
 }

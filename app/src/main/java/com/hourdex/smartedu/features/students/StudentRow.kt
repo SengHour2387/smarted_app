@@ -2,6 +2,7 @@ package com.hourdex.smartedu.features.students
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -13,18 +14,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.hourdex.smartedu.R
 import com.kyant.capsule.ContinuousRoundedRectangle
 
 @Composable
 fun StudentRow(
     student: StudentRes,
     onClick: () -> Unit,
+    onClickDelete: () -> Unit,
     animatedVisibilityScope:  AnimatedVisibilityScope,
     sharedTransitionScope: SharedTransitionScope,
     widths: List<Dp>
@@ -47,13 +52,20 @@ fun StudentRow(
                 .padding(12.dp)
         }
     ) {
-
         TableCell(student.id.toString(), widths[0])
         TableCell(student.full_name, widths[1])
         TableCell(student.users.email, widths[2])
         TableCell(student.users.phone.toString(), widths[3])
         TableCell(student.status, widths[4])
         TableCell(student.student_code, widths[5])
+        Image(
+            modifier = Modifier.clickable(
+                onClick = onClickDelete
+            ),
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.error),
+            painter = painterResource(id = R.drawable.style_bulk_7),
+            contentDescription = null,
+        )
     }
 }
 

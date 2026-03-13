@@ -102,7 +102,10 @@ fun StudentsScreen(
                         onClick = { onNavigateToStudentDetails(student.id) },
                         widths = widths,
                         sharedTransitionScope = sharedTransitionScope,
-                        animatedVisibilityScope = animatedVisibilityScope
+                        animatedVisibilityScope = animatedVisibilityScope,
+                        onClickDelete = {
+                            studentsViewModel.deleteStudent(student.id)
+                        }
                     )
                 }
             }

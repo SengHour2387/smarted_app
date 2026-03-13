@@ -1,5 +1,6 @@
 package com.hourdex.smartedu.features.students
 
+import android.net.http.HttpException
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -41,6 +42,21 @@ class StudentsViewModel @Inject constructor(
                 Log.d("StudentsViewModel", "Fetched ${_students.value.size} students")
             } catch (e: Exception) {
                 Log.e("StudentsViewModel", "Error fetching students", e)
+            }
+        }
+    }
+
+    fun deleteStudent(id: Long) {
+        viewModelScope.launch {
+            try {
+                studentService.deleteStudentById(id)
+                getStudents()
+            } catch (e: retrofit2.HttpException) {
+                Log.e("StudentsViewModel", "Error deleting cuz: ${e.message()}", e)
+            }
+
+            catch (e: Exception) {
+                Log.e("StudentsViewModel", "Error deleting student", e)
             }
         }
     }

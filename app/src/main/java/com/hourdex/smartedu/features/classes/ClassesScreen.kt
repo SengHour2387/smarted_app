@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -58,6 +59,8 @@ import com.kyant.backdrop.effects.blur
 import com.kyant.backdrop.effects.lens
 import com.kyant.backdrop.effects.vibrancy
 import com.kyant.capsule.ContinuousRoundedRectangle
+import dev.chrisbanes.haze.HazeProgressive
+import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.rememberHazeState
 import kotlinx.coroutines.launch
@@ -106,6 +109,10 @@ fun ClassesScreen(
         ) {
 
             ClassesList(
+                modifier = Modifier.hazeSource(hazeState)
+                    .layerBackdrop(backdrop)
+                    .background(backgroundColor)
+                ,
                 classes = classes,
                 onClickEdit ={
                     name.value = it.name
@@ -151,6 +158,18 @@ fun ClassesScreen(
                 hazeState = hazeState,
                 backdrop = backdrop,
                 onBack = onBack,
+            )
+
+            Box(
+                Modifier.align(Alignment.BottomCenter).fillMaxWidth().height(100.dp)
+                    .hazeEffect(hazeState) {
+                        progressive = HazeProgressive.verticalGradient(
+                            preferPerformance = true,
+                            startIntensity = 0f,
+                            endIntensity = 1f
+                        )
+                        blurRadius = 30.dp
+                    }
             )
 
 

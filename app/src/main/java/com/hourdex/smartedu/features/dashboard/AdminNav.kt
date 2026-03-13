@@ -76,6 +76,8 @@ fun AdminNav(
                             AdminDashboard(
                                 subjectsViewModel = subjectsViewModel,
                                 classesViewModel = classesViewModel,
+                                studentsViewModel = studentsViewModel,
+                                enrollViewModel = enrollViewModel,
                                 sharedTransitionScope = this@SharedTransitionLayout,
                                 animatedVisibilityScope = this@composable,
                                 onNavigateToClasses = {navController.navigate("admin/classes")},

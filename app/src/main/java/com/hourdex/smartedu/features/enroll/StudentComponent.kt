@@ -31,6 +31,7 @@ fun StudentMiniRow(
     student: StudentRes,
     widths: List<Dp>,
     isSelected: Boolean,
+    hasSelection: Boolean = true,
     onCheckedChange: (Long) -> Unit
 ) {
 
@@ -39,16 +40,19 @@ fun StudentMiniRow(
             .fillMaxWidth()
             .padding(2.dp)
             .clip(ContinuousRoundedRectangle(35))
-            .background(MaterialTheme.colorScheme.secondaryContainer)
-            .clickable { onCheckedChange(student.id) }
+            .background(MaterialTheme.colorScheme.surfaceContainer)
+            .clickable {
+                onCheckedChange(student.id) }
             .padding(5.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Checkbox(
-            modifier = Modifier.clip(CircleShape),
-            checked = isSelected,
-            onCheckedChange = { onCheckedChange(student.id) }
-        )
+        if (hasSelection) {
+            Checkbox(
+                modifier = Modifier.clip(CircleShape),
+                checked = isSelected,
+                onCheckedChange = { onCheckedChange(student.id) }
+            )
+        }
 
         TableCell(student.id.toString(), widths[0])
         TableCell(student.full_name, widths[1])

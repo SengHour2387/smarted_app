@@ -20,12 +20,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hourdex.smartedu.R
+import com.hourdex.smartedu.uis.components.randomPastelColor
 
 @Composable
 fun ClassesTile(
@@ -43,11 +46,20 @@ fun ClassesTile(
                 onClick = onClick
             )
             .clip(RoundedCornerShape(24))
-            .background(color = MaterialTheme.colorScheme.secondaryContainer)
+            .background(color = MaterialTheme.colorScheme.surfaceContainer)
             ,
         contentAlignment = Alignment.CenterStart
 
     ) {
+
+        Image(
+            modifier = Modifier.matchParentSize(),
+            contentScale = ContentScale.FillWidth,
+            alignment = Alignment.BottomCenter,
+            colorFilter = ColorFilter.tint(Color(randomPastelColor())),
+            painter = painterResource(R.drawable.rectangle_154_2), contentDescription = null
+        )
+
         Column(
             modifier = Modifier
                 .padding(20.dp)
@@ -55,7 +67,7 @@ fun ClassesTile(
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
             Text(text = classesRes.name, fontSize = 24.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurface)
-            Text( " Grade: "+ classesRes.grade_level.toString(), color = MaterialTheme.colorScheme.onBackground)
+            Text( " Grade: "+ classesRes.grade_level.toString(), color = MaterialTheme.colorScheme.onSurface)
         }
         Column(
             modifier = Modifier

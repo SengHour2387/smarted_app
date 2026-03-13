@@ -41,7 +41,7 @@ object RetrofitModule {
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://192.168.1.110:3000/api/")
+            .baseUrl("http://192.168.1.33:3000/api/")
             .client(okHttpClient)
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
             .build()
