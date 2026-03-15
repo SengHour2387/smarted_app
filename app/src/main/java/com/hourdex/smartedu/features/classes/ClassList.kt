@@ -18,6 +18,7 @@ fun ClassesList(
     onClick: (ClassesRes) -> Unit = {},
     isSelectable: Boolean = false,
     onClickEdit: (ClassesRes) -> Unit,
+    isEditable: Boolean = false,
     onClickDelete: (ClassesRes) -> Unit,
 ) {
     LazyColumn(
@@ -26,6 +27,7 @@ fun ClassesList(
     ) {
         items(classes) {
             ClassesTile(
+                isEditable = isEditable,
                 classesRes = it,
                 isSelectable = isSelectable,
                 onClick = { onClick(it)},

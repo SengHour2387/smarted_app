@@ -32,14 +32,16 @@ import com.hourdex.smartedu.uis.components.randomPastelColor
 
 @Composable
 fun ClassesTile(
+    modifier: Modifier = Modifier,
     classesRes: ClassesRes,
     isSelectable: Boolean = false,
+    isEditable: Boolean = false,
     onClick:()-> Unit = {},
     onClickEdit: () -> Unit = {},
     onClickDelete: () -> Unit = {},
 ) {
     Box(
-        Modifier.padding(5.dp)
+        modifier.padding(5.dp)
             .fillMaxWidth().height(120.dp)
             .clickable(
                 enabled = isSelectable,
@@ -68,6 +70,7 @@ fun ClassesTile(
         ) {
             Text(text = classesRes.name, fontSize = 24.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurface)
             Text( " Grade: "+ classesRes.grade_level.toString(), color = MaterialTheme.colorScheme.onSurface)
+            Text(classesRes.subjects.joinToString(separator = ", "), color = MaterialTheme.colorScheme.onSurface)
         }
         Column(
             modifier = Modifier
@@ -77,7 +80,7 @@ fun ClassesTile(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.End
         ) {
-            if(!isSelectable) {
+            if(isEditable) {
                 Row(
                     modifier =Modifier.clip(CircleShape)
                         .background(MaterialTheme.colorScheme.surface).padding(5.dp).padding(1.dp),
@@ -112,7 +115,14 @@ fun ClassesTile(
                 verticalAlignment = Alignment.Bottom
             ) {
                 Text( "Capacity: ", color = MaterialTheme.colorScheme.onBackground)
-                Text(text = "${classesRes.capacity}", fontSize = 24.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurface)
+                if(classesRes.student_count>0)
+                {
+                    Text(text = "${classesRes.student_count}/${classesRes.capacity}", fontSize = 24.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurface)
+                }
+                else {
+                    Text(text = "${classesRes.capacity}", fontSize = 24.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurface)
+                }
+
             }
         }
     }

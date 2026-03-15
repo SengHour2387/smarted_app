@@ -16,14 +16,14 @@ data class TeacherReq( val email: String, val password: String, val full_name: S
 @Serializable
 data class TeacherRes(
     val id: Int,
-    val user_id: Int,
+    val user_id: Int? = null,
     val employee_code: String,
     val full_name: String,
-    val department: String,
-    val joining_date: String,        // keep as String, or change to LocalDate if you parse dates
-    val is_class_teacher: Boolean,
-    val created_at: String,          // keep as String, or change to LocalDateTime if you parse timestamps
-    val users: UserRes               // per your note: reuse UserRes here
+    val department: String? = null,
+    val joining_date: String? = null,        // keep as String, or change to LocalDate if you parse dates
+    val is_class_teacher: Boolean? = null,
+    val created_at: String? = null,          // keep as String, or change to LocalDateTime if you parse timestamps
+    val users: UserRes? = null               // per your note: reuse UserRes here
 )
 
 interface TeacherService {

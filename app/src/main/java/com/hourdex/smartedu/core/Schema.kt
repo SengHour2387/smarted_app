@@ -1,9 +1,7 @@
 package com.hourdex.smartedu.core
 
 import kotlinx.serialization.Serializable
-import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.POST
 
 
 @Serializable

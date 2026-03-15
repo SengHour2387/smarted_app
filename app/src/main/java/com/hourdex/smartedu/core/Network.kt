@@ -7,6 +7,8 @@ import com.hourdex.smartedu.features.edYears.EdYearsService
 import com.hourdex.smartedu.features.enroll.EnrollService
 import com.hourdex.smartedu.features.students.StudentService
 import com.hourdex.smartedu.features.subjects.SubjectsService
+import com.hourdex.smartedu.features.teacherSubjectClass.TeacherAssignService
+import com.hourdex.smartedu.features.teachers.TeacherService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -41,7 +43,8 @@ object RetrofitModule {
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://192.168.1.33:3000/api/")
+            .baseUrl("https://smartclassapi-production.up.railway.app/api/")
+//            .baseUrl("http://172.21.0.209:3000/api/")
             .client(okHttpClient)
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
             .build()
@@ -87,5 +90,17 @@ object RetrofitModule {
     @Singleton
     fun provideEnrollStudent( retrofit: Retrofit ): EnrollService {
         return  retrofit.create(EnrollService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTeacherService(retrofit: Retrofit): TeacherService {
+        return retrofit.create(TeacherService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTeacherAssignService(retrofit: Retrofit): TeacherAssignService {
+        return retrofit.create(TeacherAssignService::class.java)
     }
 }

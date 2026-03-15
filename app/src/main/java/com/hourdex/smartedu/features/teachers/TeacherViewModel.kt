@@ -3,6 +3,7 @@ package com.hourdex.smartedu.features.teachers
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -18,6 +19,8 @@ sealed class AddTeacherState {
     data class Error(val message: String) : AddTeacherState()
 }
 
+
+@HiltViewModel
 class TeacherViewModel @Inject constructor(
     private val teacherService: TeacherService
 ) : ViewModel() {
@@ -56,6 +59,7 @@ class TeacherViewModel @Inject constructor(
                 _addTeacherState.value = AddTeacherState.Loading
                 val createdTeacher = teacherService.addTeacher(teacher)
                 _addTeacherState.value = AddTeacherState.Success(createdTeacher)
+                getTeachers()
             } catch (e: HttpException) {
                 Log.d("TeacherViewModel", "Error creating teacher", e)
                 _addTeacherState.value = AddTeacherState.Error("Error")

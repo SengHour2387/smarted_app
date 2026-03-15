@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hourdex.smartedu.R
+import com.hourdex.smartedu.features.subjects.SubjectList
 import com.hourdex.smartedu.uis.components.AlertDialogExample
 import com.hourdex.smartedu.uis.components.GlassBottomSheet
 import com.hourdex.smartedu.uis.components.LLTextField
@@ -103,40 +104,61 @@ fun SubjectsScreen(
                 drawContent()
             }
 
-            LazyColumn(
-                Modifier.fillMaxSize()
-                    .hazeSource(hazeState)
-                    .layerBackdrop(backdrop)
-                    .background(backgroundColor),
-                contentPadding = PaddingValues(top = 150.dp, bottom = 150.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                item {
-                }
-                if(subjects.isNotEmpty()) {
-                    items(subjects.size) { index ->
-                        SubjectTileAdmin(subjectsRes = subjects[index],
-                            hasEdit = true,
-                            onClickEdit = {id->
-                                selectedId.longValue = id
-                                isShowingEdit.value = true
-                                newSubjectName.value = subjects[index].name
-                                coroutineScope.launch {
-                                    sheetEditState.show()
-                                }
-                            },
-                            onClickDelete = {id->
-                                openAlertDialog.value = true
-                                selectedId.longValue = id
-                            }
-                        )
+            SubjectList(
+                subjects = subjects,
+                backgroundColor = backgroundColor,
+                hasEdit = true,
+                backdrop = backdrop,
+                hazeState = hazeState,
+                onClickEdit = { id ->
+                    selectedId.longValue = id
+                    isShowingEdit.value = true
+                    newSubjectName.value = subjects.first { it.id == id }.name
+                    coroutineScope.launch {
+                        sheetEditState.show()
                     }
-                } else {
-                    item {
-                        Text("No subjects found")
-                    }
-                }
-            }
+                },
+                onClickDelete = { id ->
+                    openAlertDialog.value = true
+                    selectedId.longValue = id
+                },
+                onClick = {},
+            )
+
+//            LazyColumn(
+//                Modifier.fillMaxSize()
+//                    .hazeSource(hazeState)
+//                    .layerBackdrop(backdrop)
+//                    .background(backgroundColor),
+//                contentPadding = PaddingValues(top = 150.dp, bottom = 150.dp),
+//                horizontalAlignment = Alignment.CenterHorizontally
+//            ) {
+//                item {
+//                }
+//                if(subjects.isNotEmpty()) {
+//                    items(subjects.size) { index ->
+//                        SubjectTileAdmin(subjectsRes = subjects[index],
+//                            hasEdit = true,
+//                            onClickEdit = {id->
+//                                selectedId.longValue = id
+//                                isShowingEdit.value = true
+//                                newSubjectName.value = subjects[index].name
+//                                coroutineScope.launch {
+//                                    sheetEditState.show()
+//                                }
+//                            },
+//                            onClickDelete = {id->
+//                                openAlertDialog.value = true
+//                                selectedId.longValue = id
+//                            }
+//                        )
+//                    }
+//                } else {
+//                    item {
+//                        Text("No subjects found")
+//                    }
+//                }
+//            }
 
             MainTitle(
                 text = "Subjects",

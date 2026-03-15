@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -46,6 +47,10 @@ import com.hourdex.smartedu.features.enroll.UnenrolledStudentList
 import com.hourdex.smartedu.features.enroll.rememberStudentMiniWidths
 import com.hourdex.smartedu.features.students.StudentsViewModel
 import com.hourdex.smartedu.features.subjects.SubjectsViewModel
+import com.hourdex.smartedu.features.teacherSubjectClass.TeacherAssignViewModel
+import com.hourdex.smartedu.features.teacherSubjectClass.TeacherAssignmentListScreen
+import com.hourdex.smartedu.features.teacherSubjectClass.TeacherAssignmentTable
+import com.hourdex.smartedu.features.teachers.TeacherViewModel
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
 import com.kyant.capsule.ContinuousRoundedRectangle
 import dev.chrisbanes.haze.HazeProgressive
@@ -57,14 +62,18 @@ import dev.chrisbanes.haze.rememberHazeState
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun AdminDashboard(
-    subjectsViewModel: SubjectsViewModel = hiltViewModel(),
-    classesViewModel: ClassesVieModel = hiltViewModel(),
-    studentsViewModel: StudentsViewModel=hiltViewModel(),
-    enrollViewModel: EnrollViewModel =hiltViewModel(),
+    subjectsViewModel: SubjectsViewModel,
+    classesViewModel: ClassesVieModel ,
+    studentsViewModel: StudentsViewModel,
+    teachersViewModel: TeacherViewModel,
+    teacherAssignViewModel: TeacherAssignViewModel,
+    enrollViewModel: EnrollViewModel,
     onNavigateToSubjects: () -> Unit = {},
     onNavigateToClasses: () -> Unit = {},
     onNavigateToStudents: () -> Unit = {},
     onNavigateToEnrollStudent: () -> Unit = {},
+    onNavigateToAssignTeacher: () -> Unit = {},
+    onNavigateToTeachers: () -> Unit = {},
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope
 
@@ -72,6 +81,8 @@ fun AdminDashboard(
     val subjects by subjectsViewModel.subjects.collectAsStateWithLifecycle()
     val classes by classesViewModel.classes.collectAsStateWithLifecycle()
     val students by studentsViewModel.students.collectAsStateWithLifecycle()
+    val teachers by teachersViewModel.teachers.collectAsStateWithLifecycle()
+    val assignments by teacherAssignViewModel.teacherAssignments.collectAsStateWithLifecycle()
     val waitList by enrollViewModel.unenrolledStudents.collectAsStateWithLifecycle()
 
 
@@ -89,10 +100,12 @@ fun AdminDashboard(
     }
 
     with(sharedTransitionScope) {
-        Column(
+        LazyColumn(
             Modifier.fillMaxSize().displayCutoutPadding().padding(top = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
+            item {
             Text(
                 modifier = Modifier.sharedBounds(
                     rememberSharedContentState("main_title"),
@@ -125,7 +138,7 @@ fun AdminDashboard(
                         sharedTransitionScope = sharedTransitionScope,
                         animatedVisibilityScope = animatedVisibilityScope,
                         icon = painterResource(R.drawable.student),
-                        onClick = {}
+                        onClick = onNavigateToAssignTeacher
                     )
                 }
             }
@@ -180,6 +193,20 @@ fun AdminDashboard(
                 ) {
                     onNavigateToStudents()
                 }
+
+                SummaryCard(
+                    modifier = Modifier.sharedBounds(
+                        resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
+                        sharedContentState = rememberSharedContentState("teachers_screen_card"),
+                        animatedVisibilityScope = animatedVisibilityScope
+                    ),
+                    title = "Teachers",
+                    value = teachers.size.toString(),
+                    backdrop = backdrop,
+                    icon = { },
+                ) {
+                    onNavigateToTeachers()
+                }
             }
 
             Text(
@@ -219,6 +246,7 @@ fun AdminDashboard(
                                 startIntensity = 0f,
                                 endIntensity = 1f
                             )
+                            blurRadius = 5.dp
                         },
                     contentAlignment = Alignment.BottomCenter
                 ) {
@@ -226,6 +254,13 @@ fun AdminDashboard(
                 }
             }
 
+                TeacherAssignmentTable(
+                    assignments = assignments,
+                    modifier = Modifier.padding(horizontal = 15.dp),
+                    onViewDetail = { },
+                )
+
+            }
         }
     }
 }

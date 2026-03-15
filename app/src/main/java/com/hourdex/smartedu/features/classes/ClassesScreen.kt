@@ -73,6 +73,7 @@ fun ClassesScreen(
     animatedVisibilityScope: AnimatedVisibilityScope,
     sharedTransitionScope: SharedTransitionScope,
     onBack: () -> Unit,
+    onNavigateToSeeClass: () -> Unit,
 ) {
 
     val classes by viewModel.classes.collectAsStateWithLifecycle()
@@ -94,9 +95,7 @@ fun ClassesScreen(
         drawContent()
     }
 
-    if(classes.isEmpty()) {
         viewModel.getAllClasses()
-    }
 
     with(sharedTransitionScope) {
         Box(
@@ -113,7 +112,13 @@ fun ClassesScreen(
                     .layerBackdrop(backdrop)
                     .background(backgroundColor)
                 ,
+                isEditable = true,
                 classes = classes,
+                onClick = {
+                    viewModel.setSelectedClassId(it.id)
+                    onNavigateToSeeClass()
+                },
+                isSelectable = true,
                 onClickEdit ={
                     name.value = it.name
                     gradeLevel.value = it.grade_level.toString()

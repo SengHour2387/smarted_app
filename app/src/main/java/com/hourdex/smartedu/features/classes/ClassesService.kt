@@ -1,6 +1,7 @@
 package com.hourdex.smartedu.features.classes
 
 import com.hourdex.smartedu.features.edYears.EdYearsRes
+import com.hourdex.smartedu.features.students.StudentRes
 import kotlinx.serialization.Serializable
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -14,7 +15,7 @@ import retrofit2.http.Query
 data class ClassesReq( val name: String, val grade_level:Long, val academic_year_id:Long, val capacity:Long)
 
 @Serializable
-data class ClassesRes(val id: Long, val name: String, val grade_level:Long, val academic_years: EdYearsRes, val capacity:Long)
+data class ClassesRes(val id: Long, val name: String, val grade_level:Long, val academic_years: EdYearsRes, val capacity:Long,val student_count:Long =0,val subjects: List<String> = emptyList())
 
 interface ClassesService {
     @GET("admin/classes")
@@ -30,4 +31,7 @@ interface ClassesService {
 
     @GET("admin/classes/available")
     suspend fun getAvailableClasses(@Query("amount") amount: Int ): List<ClassesRes>
+
+    @GET("admin/classes/{id}/students")
+    suspend fun getStudentsInClass(@Path("id") id: Long): List<StudentRes>
 }

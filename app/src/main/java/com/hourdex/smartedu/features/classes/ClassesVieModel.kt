@@ -3,6 +3,7 @@ package com.hourdex.smartedu.features.classes
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hourdex.smartedu.features.students.StudentRes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,6 +21,13 @@ class ClassesVieModel @Inject constructor(
 
     private val _classes = MutableStateFlow<List<ClassesRes>>(emptyList())
     private val _reqMessage = MutableStateFlow<String?>(null)
+
+    private val _studentInAClass = MutableStateFlow<List<StudentRes>>(emptyList())
+    val studentInAClass: StateFlow<List<StudentRes>> = _studentInAClass.asStateFlow()
+    private val _selectedClassId = MutableStateFlow<Long?>(null)
+    val selectedClassId: StateFlow<Long?> = _selectedClassId.asStateFlow()
+
+
     val classes: StateFlow<List<ClassesRes>> = _classes.asStateFlow()
     val reqMessage: StateFlow<String?> = _reqMessage.asStateFlow()
 
@@ -28,8 +36,25 @@ class ClassesVieModel @Inject constructor(
         getAllClasses()
     }
 
+    fun setSelectedClassId(id: Long) {
+        _selectedClassId.value = id
+        getStudentInAClass()
+    }
+
     fun refresh() {
         getAllClasses()
+    }
+
+
+    fun getStudentInAClass() {
+        viewModelScope.launch {
+            try {
+                _studentInAClass.value = classesService.getStudentsInClass(selectedClassId.value?:0L)
+            } catch (e: Exception) {
+                Log.d("Classes", "Error fetching classes", e)
+
+            }
+        }
     }
 
     fun deleteClass(id: Long) {

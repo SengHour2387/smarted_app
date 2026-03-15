@@ -28,13 +28,18 @@ fun SubjectTileAdmin(
     hasEdit: Boolean = false,
     subjectsRes: SubjectsRes,
     onClickEdit: (id:Long) -> Unit = {},
-    onClickDelete: (id:Long) -> Unit = {}
+    onClickDelete: (id:Long) -> Unit = {},
+    onClick:(id:Long) -> Unit = {},
 ) {
 
     Row(
         Modifier
             .fillMaxWidth()
             .padding(8.dp)
+            .clickable(
+                enabled = !hasEdit,
+                onClick = {onClick(subjectsRes.id)}
+            )
             .clip(RoundedCornerShape(35))
             .background(color = MaterialTheme.colorScheme.surfaceContainer)
             .padding(10.dp),

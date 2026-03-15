@@ -34,7 +34,7 @@ fun LoginScreen(
     onNavigateToRegister: ()-> Unit = {}
 ) {
     var email by remember { mutableStateOf("") }
-    var role by remember { mutableStateOf("") }
+    var role by remember { mutableStateOf("admin") }
     var password by remember { mutableStateOf("") }
     val expanded = remember { mutableStateOf(false) }
 
@@ -71,41 +71,41 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
 
-        Box(
+//        Box(
+//
+//        ) {
+//            TextButton(
+//                onClick = {
+//                    expanded.value = !expanded.value
+//                }
+//            ) { Text("Select Role")}
+//            DropdownMenu(
+//                expanded = expanded.value,
+//                onDismissRequest = { expanded.value = false }
+//            ) {
+//                DropdownMenuItem(
+//                    text = { Text("Admin") },
+//                    onClick = { role = "admin"
+//                    expanded.value = false
+//                    }
+//                )
+//                DropdownMenuItem(
+//                    text = { Text("Student") },
+//                    onClick = { role = "student"
+//                        expanded.value = false
+//                    }
+//                )
+//                DropdownMenuItem(
+//                    text = { Text("Teacher") },
+//                    onClick = { role = "teacher"
+//                        expanded.value = false
+//                    }
+//                )
+//            }
+//        }
 
-        ) {
-            TextButton(
-                onClick = {
-                    expanded.value = !expanded.value
-                }
-            ) { Text("Select Role")}
-            DropdownMenu(
-                expanded = expanded.value,
-                onDismissRequest = { expanded.value = false }
-            ) {
-                DropdownMenuItem(
-                    text = { Text("Admin") },
-                    onClick = { role = "admin"
-                    expanded.value = false
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text("Student") },
-                    onClick = { role = "student"
-                        expanded.value = false
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text("Teacher") },
-                    onClick = { role = "teacher"
-                        expanded.value = false
-                    }
-                )
-            }
-        }
 
-
-        Text("Role: $role", fontWeight = FontWeight.SemiBold,fontSize = 24.sp, color = MaterialTheme.colorScheme.onSurface)
+//        Text("Role: $role", fontWeight = FontWeight.SemiBold,fontSize = 24.sp, color = MaterialTheme.colorScheme.onSurface)
 
         errorMessage?.let {
             Spacer(modifier = Modifier.height(8.dp))

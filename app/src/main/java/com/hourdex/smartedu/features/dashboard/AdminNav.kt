@@ -4,8 +4,12 @@ import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,6 +43,7 @@ import com.hourdex.smartedu.R
 import com.hourdex.smartedu.features.auth.AuthViewModel
 import com.hourdex.smartedu.features.classes.ClassesScreen
 import com.hourdex.smartedu.features.classes.ClassesVieModel
+import com.hourdex.smartedu.features.classes.StudentReadOnlyListScreen
 import com.hourdex.smartedu.features.enroll.EnrollStudentScreen
 import com.hourdex.smartedu.features.enroll.EnrollViewModel
 import com.hourdex.smartedu.features.enroll.SelectClassScreen
@@ -48,7 +53,13 @@ import com.hourdex.smartedu.features.students.StudentsScreen
 import com.hourdex.smartedu.features.students.StudentsViewModel
 import com.hourdex.smartedu.features.subjects.SubjectsScreen
 import com.hourdex.smartedu.features.subjects.SubjectsViewModel
+import com.hourdex.smartedu.features.teacherSubjectClass.AddAssignScreen
+import com.hourdex.smartedu.features.teacherSubjectClass.TeacherAssignViewModel
+import com.hourdex.smartedu.features.teachers.AddTeacherScreen
+import com.hourdex.smartedu.features.teachers.TeacherViewModel
+import com.hourdex.smartedu.features.teachers.TeachersScreen
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
+import androidx.compose.runtime.collectAsState
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -65,6 +76,8 @@ fun AdminNav(
                 val subjectsViewModel: SubjectsViewModel = hiltViewModel()
                 val classesViewModel: ClassesVieModel = hiltViewModel()
                 val studentsViewModel: StudentsViewModel = hiltViewModel()
+                val teacherViewModel: TeacherViewModel = hiltViewModel()
+                val teacherAssignViewModel: TeacherAssignViewModel = hiltViewModel()
                 val enrollViewModel: EnrollViewModel = hiltViewModel()
                 SharedTransitionLayout {
                     NavHost(
@@ -77,13 +90,17 @@ fun AdminNav(
                                 subjectsViewModel = subjectsViewModel,
                                 classesViewModel = classesViewModel,
                                 studentsViewModel = studentsViewModel,
+                                teachersViewModel = teacherViewModel,
                                 enrollViewModel = enrollViewModel,
+                                teacherAssignViewModel = teacherAssignViewModel,
                                 sharedTransitionScope = this@SharedTransitionLayout,
                                 animatedVisibilityScope = this@composable,
                                 onNavigateToClasses = {navController.navigate("admin/classes")},
                                 onNavigateToSubjects = { navController.navigate("admin/subjects")},
                                 onNavigateToStudents = {navController.navigate("admin/students")},
-                                onNavigateToEnrollStudent = {navController.navigate("admin/enroll-student")}
+                                onNavigateToEnrollStudent = {navController.navigate("admin/enroll-student")},
+                                onNavigateToAssignTeacher = {navController.navigate("admin/assign-teacher")},
+                                onNavigateToTeachers = {navController.navigate("admin/teachers")}
                             )
                         }
                         composable("admin/subjects") {
@@ -98,9 +115,26 @@ fun AdminNav(
                             ClassesScreen(
                                 viewModel = classesViewModel,
                                 onBack = {navController.popBackStack()},
+                                onNavigateToSeeClass = {
+                                    navController.navigate("admin/class/students")
+                                },
                                 sharedTransitionScope = this@SharedTransitionLayout,
                                 animatedVisibilityScope = this@composable
                             )
+                        }
+
+                        composable(
+                            route = "admin/class/students",
+                            enterTransition = { slideInHorizontally { it } + fadeIn() },
+                            exitTransition = { slideOutHorizontally { it } + fadeOut() }
+                        ) {
+                            StudentReadOnlyListScreen(
+                                students = classesViewModel.studentInAClass.collectAsState().value,
+                                class_id = classesViewModel.selectedClassId.value?:0L,
+                                sharedTransitionScope = this@SharedTransitionLayout,
+                                animatedVisibilityScope = this@composable,
+                                modifier = Modifier
+                                )
                         }
                         composable("admin/students") {
                             StudentsScreen(
@@ -141,6 +175,47 @@ fun AdminNav(
                                 sharedTransitionScope = this@SharedTransitionLayout
                             )
                         }
+                        composable("admin/teachers") {
+                            TeachersScreen(
+                                onBack = {
+                                    navController.popBackStack()
+                                },
+                                sharedTransitionScope = this@SharedTransitionLayout,
+                                animatedVisibilityScope = this@composable,
+                                teacherViewModel = teacherViewModel,
+                                onNavigateToAddTeacher = {
+                                    navController.navigate("admin/teachers/add")
+                                }
+                            )
+                        }
+
+                        composable(route = "admin/teachers/add") {
+                            AddTeacherScreen(
+                                onBack = {
+                                    navController.popBackStack()
+                                },
+                                viewModel = teacherViewModel,
+                                sharedTransitionScope = this@SharedTransitionLayout,
+                                animatedVisibilityScope = this@composable
+                            )
+                        }
+
+                        composable(
+                            route ="admin/assign-teacher"
+                        ) {
+                            AddAssignScreen(
+                                teacherViewModel = teacherViewModel,
+                                teacherAssignViewModel = teacherAssignViewModel,
+                                subjectViewModel = subjectsViewModel,
+                                onDone = {
+                                    navController.popBackStack()
+                                },
+                                classViewModel = classesViewModel,
+                                sharedTransitionScope = this@SharedTransitionLayout,
+                                animatedVisibilityScope = this@composable
+                            )
+                        }
+
                         composable(
                             route = "admin/enroll-student"
                         ) {
